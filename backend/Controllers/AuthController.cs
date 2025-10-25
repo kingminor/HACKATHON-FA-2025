@@ -12,6 +12,7 @@ public class AuthController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IConfiguration _configuration;
+    private readonly PersonService _personService;
 
     public AuthController(UserManager<ApplicationUser> userManager, IConfiguration configuration)
     {
@@ -29,7 +30,19 @@ public class AuthController : ControllerBase
         if (!result.Succeeded) return BadRequest(result.Errors);
 
         await _userManager.AddToRoleAsync(user, model.Role);
-        return Ok("User registered successfully");
+
+        if(!string.Equals(model.Role, "Admin", StringComparison.OrdinalIgnoreCase))
+        {
+            Guid PersonId = _personService.AddPerson(model.Username);
+            user.PersonId = PersonId;
+            await _userManager.UpdateAsync(user);
+        }
+
+        return Ok(new
+        {
+            Message = "User registered successfully",
+            user.PersonId
+        });
     }
 
     [HttpPost("login")]
@@ -52,6 +65,11 @@ public class AuthController : ControllerBase
             new Claim(JwtRegisteredClaimNames.Sub, user.Id),
             new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
         };
+
+        if(user.PersonId.HasValue)
+        {
+            claims.Add(new Claim("personId", user.PersonId.Value.ToString()));
+        }
 
         claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
 

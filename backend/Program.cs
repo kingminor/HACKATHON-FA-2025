@@ -36,6 +36,15 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+//Add Cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy => policy.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+});
+
 // --- Add controllers ---
 builder.Services.AddControllers();
 builder.Services.AddSingleton<PersonService>();
@@ -60,6 +69,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.UseCors("AllowAll");
 
 // --- Apply migrations & seed default admin ---
 using (var scope = app.Services.CreateScope())
@@ -80,7 +90,7 @@ using (var scope = app.Services.CreateScope())
 
     // Create default admin if it doesn't exist
     string adminUsername = "admin";
-    string adminPassword = "Admin123!"; // Change to secure password
+    string adminPassword = "Admin123!"; // Most SecurePasswordEver
 
     var adminUser = await userManager.FindByNameAsync(adminUsername);
     if (adminUser == null)
