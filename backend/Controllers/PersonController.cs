@@ -34,6 +34,7 @@ public class PersonController : ControllerBase
         return person;
     }
 
+    //Create a person
     [Authorize(Roles = "Admin")]
     [HttpPost]
     public ActionResult<Guid> CreatePerson([FromBody] string name)
@@ -45,6 +46,18 @@ public class PersonController : ControllerBase
 
         Guid id = _personService.AddPerson(name);
         return CreatedAtAction(nameof(GetPersonById), new { id }, id);
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost("{id}/remove")]
+    public ActionResult DeletePerson(Guid id)
+    {
+        bool success = _personService.RemovePerson(id);
+        if (!success)
+        {
+            return NotFound($"Person of Id {id} not found.");
+        }
+        return NoContent();
     }
 
     [Authorize(Roles = "Admin")]
@@ -64,6 +77,22 @@ public class PersonController : ControllerBase
         return Ok($"Task '{task.Name}' added to person {id}.");
     }
 
+    [Authorize(Roles = "Admin")]
+    [HttpPost("{id}/tasks/remove")]
+    public ActionResult RemoveTaskFromPerson(Guid id, [FromBody] string taskName)
+    {
+        if (string.IsNullOrWhiteSpace(taskName))
+        {
+            return BadRequest("Task name cannot be empty.");
+        }
+
+        bool success = _personService.RemoveTaskFromPerson(id, taskName);
+
+        if(!success)
+            return NotFound($"Person with ID {id} or task '{taskName}' not found.");
+        return Ok($"Task '{taskName}' removed from person {id}.");
+    }
+
     [Authorize(Roles = "User,Admin")]
     [HttpPost("{id}/tasks/complete")]
     public ActionResult CompleteTask(Guid id, [FromBody] string taskName)
@@ -79,12 +108,21 @@ public class PersonController : ControllerBase
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpPost("assign-group/{personId}/{groupId}")]
+    [HttpPost("person/{personId}/groups/{groupId}")]
     public ActionResult AssignPersonToGroup(Guid personId, Guid groupId)
     {
         bool success = _personService.AssignPersonToGroup(personId, groupId);
-        if (!success) return NotFound($"Person {personId} not found.");
+        if (!success) return NotFound($"Person or group not found.");
         return Ok($"Person {personId} assigned to group {groupId}.");
+    }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost("person/{personId}/groups/remove")]
+    public ActionResult RemovePersonFromGroup(Guid personId)
+    {
+        bool success = _personService.RemovePersonFromGroup(personId);
+        if(!success) return NotFound($"Person not found.");
+        return Ok($"Person {personId} removed from group.");
     }
 
     [Authorize(Roles = "User,Admin")]

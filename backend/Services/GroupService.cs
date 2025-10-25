@@ -12,5 +12,10 @@ public class GroupService
         return group.Id;
     }
 
+    public bool RemoveGroup(Guid id)
+    {
+        return Groups.Remove(id);
+    }
+
     public Group? GetGroup(Guid id) => Groups.TryGetValue(id, out var group) ? group : null;
 }

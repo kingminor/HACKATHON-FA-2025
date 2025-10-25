@@ -63,6 +63,19 @@ public class PersonService
         return false;
     }
 
+    public bool RemoveTaskFromPerson(Guid id, string taskName)
+    {
+        if(!people.ContainsKey(id))
+            return false;
+        var person = people[id];
+        var taskToRemove = person.tasks
+            .FirstOrDefault(t => string.Equals(t.Name, taskName.Trim(), StringComparison.OrdinalIgnoreCase));
+        if (taskToRemove == null)
+            return false;
+        person.RemoveTask(taskToRemove);
+        return true;
+    }
+
     public bool CompletePersonTask(Guid id, string taskName)
     {
         if (!people.ContainsKey(id))
@@ -85,6 +98,13 @@ public class PersonService
         if (!people.ContainsKey(personId)) return false;
 
         people[personId].GroupId = groupId;
+        return true;
+    }
+
+    public bool RemovePersonFromGroup(Guid personId)
+    {
+        if (!people.ContainsKey(personId)) return false;
+        people[personId].GroupId = null;
         return true;
     }
 
