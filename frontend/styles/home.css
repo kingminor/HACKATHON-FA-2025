@@ -1,7 +1,7 @@
 @import url("./styles.css");
 
 body {
-    background-color: var(--white);
+    background-color: var(--secondary-color);
     overflow-y: hidden;
     height: 100vh;
 }
@@ -90,7 +90,7 @@ main {
 .todoItem.completed {
     opacity: 50%;
     position: relative;
-    background-color: var(--accent2-color);
+    background-color: var(--accent3-color);
     svg {
         cursor: auto;
     }
