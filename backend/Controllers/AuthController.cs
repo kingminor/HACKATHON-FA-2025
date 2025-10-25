@@ -58,7 +58,7 @@ public class AuthController : ControllerBase
         return Ok(new { token });
     }
 
-    [HttpPost("getpersonid")]
+    [HttpGet("getpersonid")]
     public async Task<IActionResult> GetPersonId([FromBody] string username)
     {
         var user = await _userManager.FindByNameAsync(username);
