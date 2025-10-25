@@ -58,6 +58,15 @@ public class AuthController : ControllerBase
         return Ok(new { token });
     }
 
+    [HttpPost("getpersonid")]
+    public async Task<IActionResult> GetPersonId([FromBody] string username)
+    {
+        var user = await _userManager.FindByNameAsync(username);
+        if (user == null)
+            return NotFound("User not found");
+        return Ok(new { personId = user.PersonId });
+    }
+
     private string GenerateJwtToken(ApplicationUser user, IList<string> roles)
     {
         var claims = new List<Claim>
