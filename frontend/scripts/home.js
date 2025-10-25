@@ -1,4 +1,5 @@
 import {authFetch, authFetchPost} from "./auth-helper.js";
+import { GetGroupRank, GetRankGlobal, GetRankInGroup } from "./leaderboard-help.js";
 
 const id = sessionStorage.getItem("personId");
 
@@ -9,6 +10,18 @@ async function init() {
     const groupResponse = await authFetch(`http://localhost:5094/group/${player.groupId}`);
     const group = await groupResponse.json();
     console.log(group);
+
+    const inGroupRankingItem = document.querySelector("#inGroupRanking");
+    const inGroupRanking = await GetRankInGroup(id, sessionStorage.getItem("groupId"));
+    inGroupRankingItem.innerText = inGroupRanking;
+
+    const groupGlobalRankingItem = document.querySelector("#groupGlobalRanking");
+    const groupGlobalRanking = await GetGroupRank(sessionStorage.getItem("groupId"));
+    groupGlobalRankingItem.innerText = groupGlobalRanking;
+
+    const globalRankingItem = document.querySelector("#globalRanking");
+    const globalRanking = await GetRankGlobal(id);
+    globalRankingItem.innerText = globalRanking;
 
     setPage(player, group);
     console.log(player, group);
