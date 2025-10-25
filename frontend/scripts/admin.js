@@ -16,6 +16,14 @@ function setGroupModal(groupId) {
         console.log(player);
         return playerTemplate(player.name, player.id, player.tasks, player.points)
     }).join("");
+
+    modal.querySelector(".addPlayerForm").addEventListener("submit", e => {
+        e.preventDefault();
+        let username = modal.querySelector("#name").value;
+        let password = modal.querySelector("#password").value;
+        createPlayer(username, password, groupId);
+    })
+
     modal.classList.remove("hide");
     modal.querySelectorAll(".playerName").forEach(playerName => {
         playerName._handler = toggleTasks;
@@ -79,11 +87,8 @@ async function init() {
     //createPlayer("bobbb", "Bob1111!", "15e6cf57-d69f-4c13-916d-a710e76d97e7");
     await updateGroups();
     updatePlayers();
-    document.querySelectorAll(".group").forEach(el => {
-        el.addEventListener("click", (e) => groupClick(e))
-    });
     let leaderboard = "groups";
-    document.querySelectorAll(".groups").id = "selected";
+    document.querySelector(".groups").id = "selected";
     document.querySelectorAll(".leaderboard").forEach(el => {
         el.addEventListener("click", (e) => {
             leaderboard = setLeaderboard(e);
@@ -160,11 +165,17 @@ async function updatePlayers() {
 }
 
 function displayGroups() {
+    document.querySelectorAll(".group").forEach(el => {
+        el.removeEventListener("click", (e) => groupClick(e))
+    });
     const groupList = document.querySelector(".groupViewer");
     groupList.innerHTML = "";
     Object.entries(groups).forEach(([key, value]) => {
         groupList.innerHTML += groupTemplate(value.name, value.id);
     })
+    document.querySelectorAll(".group").forEach(el => {
+        el.addEventListener("click", (e) => groupClick(e))
+    });
 }
 
 function playerTemplate(name, id, tasks, points) {
@@ -222,11 +233,10 @@ async function createPlayer(username, password, groupId) {
     //console.log(response);
     const resJSON = await response.json();
     //console.log(resJSON);
-    updatePlayers();
 
     const response2 = await authFetchPost(`http://localhost:5094/person/${resJSON.personId}/groups/${groupId}`, {body: JSON.stringify("")});
-    //console.log(response2);
-    const result = await response2.json();
+    updatePlayers();
+    await window.location.reload();
     //console.log(result);
     //personId
 }
