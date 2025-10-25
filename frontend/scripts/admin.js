@@ -13,7 +13,8 @@ function setGroupModal(groupId) {
     modal.querySelector("h3").innerText = groups[groupId].name;
     modal.querySelector(".players").innerHTML = playerListDefault();
     modal.querySelector(".players").innerHTML += players[groupId].map((player) => {
-        playerTemplate(player.id, player.name, player.tasks, player.points)
+        console.log(player);
+        return playerTemplate(player.name, player.id, player.tasks, player.points)
     }).join("");
     modal.classList.remove("hide");
     modal.querySelectorAll(".playerName").forEach(playerName => {
@@ -75,7 +76,7 @@ function setLeaderboard(e) {
 }
 
 async function init() {
-    createPlayer("bobssss", "Bob1111!");
+    //createPlayer("bobbb", "Bob1111!", "15e6cf57-d69f-4c13-916d-a710e76d97e7");
     await updateGroups();
     updatePlayers();
     document.querySelectorAll(".group").forEach(el => {
@@ -120,15 +121,15 @@ async function createGroup(name) {
     }
     let response = await authFetchPost("http://localhost:5094/group", options)
     let resJSON = await response.json();
-    console.log(resJSON);
+    //console.log(resJSON);
     updateGroups();
 }
 
 async function updateGroups() {
     let response = await authFetch("http://localhost:5094/group");
-    console.log(response);
+    //console.log(response);
     groups = await response.json();
-    console.log(groups);
+    //console.log(groups);
     displayGroups();
 }
 
@@ -146,9 +147,11 @@ async function updatePlayers() {
     const resJSON = await response.json();
     console.log(resJSON);
     Object.entries(groups).forEach(([groupKey]) => {
+        console.log(groupKey);
         players[groupKey] = [];
         Object.entries(resJSON).forEach(([key, value]) => {
             if(value.groupId === groupKey) {
+                console.log(key);
                 players[groupKey].push(value);
             }
         })
@@ -174,11 +177,17 @@ function playerTemplate(name, id, tasks, points) {
             </svg>
         </div>
         <ul class="tasks hide">
-            <li>eat 700 staplers (<span>700</span>)</li>
             <li class="newTask"><a href="./task.html">+ New Task</a></li>
+            ${tasks.map((task) => {
+                return taskTemplate(task.name, task.points, task.isCompleted)
+            }).join("")}
         </ul>
     </div>
     `;
+}
+
+function taskTemplate(name, points, isComplete) {
+    return `<li class=${isComplete ? '' : 'active'}>${name} (<span>${points}</span>)</li>`;
 }
 
 function playerListDefault() {
@@ -198,7 +207,7 @@ function playerListDefault() {
     `
 }
 
-async function createPlayer(username, password) {
+async function createPlayer(username, password, groupId) {
     const newUser = {
         Username: username,
         Password: password,
@@ -210,10 +219,15 @@ async function createPlayer(username, password) {
     };
 
     const response = await authFetchPost("http://localhost:5094/auth/register", {body: JSON.stringify(newUser)});
-    console.log(response);
+    //console.log(response);
     const resJSON = await response.json();
-    console.log(resJSON);
+    //console.log(resJSON);
     updatePlayers();
 
+    const response2 = await authFetchPost(`http://localhost:5094/person/${resJSON.personId}/groups/${groupId}`, {body: JSON.stringify("")});
+    //console.log(response2);
+    const result = await response2.json();
+    //console.log(result);
+    //personId
 }
 init();
