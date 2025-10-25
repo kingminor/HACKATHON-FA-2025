@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+
 
 public class PersonService
 {
@@ -10,11 +12,12 @@ public class PersonService
 
     public Guid AddPerson(string name)
     {
-        Person newPerson = new Person(name);
         Guid id = Guid.NewGuid();
+        var newPerson = new Person(name) { Id = id };
         people.Add(id, newPerson);
         return id;
     }
+
 
     public Person? GetPerson(Guid id)
     {
