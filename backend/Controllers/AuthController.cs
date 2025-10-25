@@ -28,14 +28,30 @@ public class AuthController : ControllerBase
         var user = new ApplicationUser { UserName = model.Username };
         var result = await _userManager.CreateAsync(user, model.Password);
 
-        if (!result.Succeeded) return BadRequest(result.Errors);
+        if (!result.Succeeded)
+        {
+            var errors = result.Errors.Select(e => new
+            {
+                Code = e.Code,
+                Description = e.Description
+            });
+
+            // Optionally filter or customize messages:
+            // var errors = result.Errors.Select(e => e.Description);
+
+            return BadRequest(new
+            {
+                Message = "User registration failed",
+                Errors = errors
+            });
+        }
 
         await _userManager.AddToRoleAsync(user, model.Role);
 
-        if(!string.Equals(model.Role, "Admin", StringComparison.OrdinalIgnoreCase))
+        if (!string.Equals(model.Role, "Admin", StringComparison.OrdinalIgnoreCase))
         {
-            Guid PersonId = _personService.AddPerson(model.Username);
-            user.PersonId = PersonId;
+            Guid personId = _personService.AddPerson(model.Username);
+            user.PersonId = personId;
             await _userManager.UpdateAsync(user);
         }
 
@@ -46,17 +62,23 @@ public class AuthController : ControllerBase
         });
     }
 
+
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginModel model)
     {
         var user = await _userManager.FindByNameAsync(model.Username);
         if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password))
-            return Unauthorized("Invalid credentials");
+            return Unauthorized(new { Message = "Invalid credentials" });
 
         var roles = await _userManager.GetRolesAsync(user);
         var token = GenerateJwtToken(user, roles);
 
-        return Ok(new { token });
+        return Ok(new
+        {
+            Token = token,
+            Roles = roles,
+            PersonId = user.PersonId
+        });
     }
 
     [HttpGet("getpersonid")]

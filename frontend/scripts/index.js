@@ -23,8 +23,10 @@ form.addEventListener('submit', function(event) {
         return response.json();
     })
     .then(data => {
-        console.log("JWT Token: ", data.token);
+        console.log(data)
 
+        sessionStorage.setItem("personId", data.personId);
+        sessionStorage.setItem("role", data.roles[0]);
         sessionStorage.setItem("jwt", data.token);
 
         window.location.href = "./admin.html";

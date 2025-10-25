@@ -15,6 +15,24 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
+// ✅ Configure Identity options (password & lockout rules)
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    // Password settings
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 8;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
+
+    // Lockout settings
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+
+    // User settings
+    options.User.RequireUniqueEmail = false;
+});
+
 // --- Add JWT Authentication ---
 var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]!);
 builder.Services.AddAuthentication(options =>
@@ -36,7 +54,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-//Add Cors
+// --- Add CORS ---
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
@@ -45,12 +63,12 @@ builder.Services.AddCors(options =>
                         .AllowAnyHeader());
 });
 
-// --- Add controllers ---
+// --- Add controllers and services ---
 builder.Services.AddControllers();
 builder.Services.AddSingleton<PersonService>();
 builder.Services.AddSingleton<GroupService>();
 
-// --- Swagger for dev ---
+// --- Swagger for development ---
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -71,7 +89,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// --- Apply migrations & seed default roles and admin user ---
+// --- Apply migrations & seed default roles/admin user ---
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -107,6 +125,5 @@ using (var scope = app.Services.CreateScope())
         }
     }
 }
-
 
 app.Run();
