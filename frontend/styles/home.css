@@ -29,7 +29,7 @@ main {
 }
 
 .sidebar {
-    background-color: var(--primary-color);
+    background-color: var(--accent2-color);
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -90,6 +90,7 @@ main {
 .todoItem.completed {
     opacity: 50%;
     position: relative;
+    background-color: var(--accent2-color);
     svg {
         cursor: auto;
     }
