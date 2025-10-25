@@ -117,12 +117,12 @@ public class PersonController : ControllerBase
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpPost("person/{personId}/groups/{groupId}")]
-    public ActionResult RemovePersonFromGroup(Guid, personId, Guid groupId)
+    [HttpPost("person/{personId}/groups/remove")]
+    public ActionResult RemovePersonFromGroup(Guid personId)
     {
-        bool success = _personService.RemovePersonFromGroup(personId, groupId);
-        if(!success) return NotFound($"Person or group not found.");
-        return Ok($"Person {personId} removed from group {groupId}.");
+        bool success = _personService.RemovePersonFromGroup(personId);
+        if(!success) return NotFound($"Person not found.");
+        return Ok($"Person {personId} removed from group.");
     }
 
     [Authorize(Roles = "User,Admin")]

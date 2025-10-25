@@ -20,7 +20,22 @@ public class GroupController : ControllerBase
 		return _groupService.Groups;
     }
 
-    [Authorize(Roles = "Admin")]
+	[Authorize(Roles = "User,Admin")]
+	[HttpGet("{groupId}")]
+	public ActionResult<Group> GetGroupById(Guid groupId)
+	{
+		Group? group = _groupService.GetGroup(groupId);
+		if (group == null)
+		{
+			return NotFound($"Group with ID {groupId} not found.");
+		}
+		else
+		{
+			return group;
+		}
+	}
+
+	[Authorize(Roles = "Admin")]
     [HttpPost]
 	public ActionResult<Guid> CreateGroup([FromBody] string groupName)
 	{
