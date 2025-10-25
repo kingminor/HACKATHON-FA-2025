@@ -49,6 +49,7 @@ main {
         }
     }
     .leaderboard > p{
+        padding-top: 1%;
         text-align: center;
         font-size: 1.5rem;
     }
