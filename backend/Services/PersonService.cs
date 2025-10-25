@@ -120,7 +120,8 @@ public class PersonService
             {
                 PersonId = p.Id,
                 GroupId = p.GroupId,
-                Points = p.Points
+                Points = p.Points,
+                Name = p.Name
             })
             .OrderByDescending(e => e.Points)
             .ToList();

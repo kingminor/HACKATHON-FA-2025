@@ -41,7 +41,7 @@ function switchLeaderboard(e) {
 }
 
 function leaderboardItemTemplate(data){
-    
+    return ``
 }
 
 function UpdateLeaderboard(){
