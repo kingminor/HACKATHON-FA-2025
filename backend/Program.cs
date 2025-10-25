@@ -27,7 +27,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 
     // Lockout settings
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.MaxFailedAccessAttempts = 100000;
 
     // User settings
     options.User.RequireUniqueEmail = false;

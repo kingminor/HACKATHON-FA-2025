@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -25,7 +25,30 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterModel model)
     {
+        // Create user instance but DO NOT save yet
         var user = new ApplicationUser { UserName = model.Username };
+
+        // Validate the password first
+        foreach (var validator in _userManager.PasswordValidators)
+        {
+            var passwordResult = await validator.ValidateAsync(_userManager, user, model.Password);
+            if (!passwordResult.Succeeded)
+            {
+                var errors = passwordResult.Errors.Select(e => new
+                {
+                    Code = e.Code,
+                    Description = e.Description
+                });
+
+                return BadRequest(new
+                {
+                    Message = "Password validation failed",
+                    Errors = errors
+                });
+            }
+        }
+
+        // Now that password is valid, create the user
         var result = await _userManager.CreateAsync(user, model.Password);
 
         if (!result.Succeeded)
@@ -35,9 +58,6 @@ public class AuthController : ControllerBase
                 Code = e.Code,
                 Description = e.Description
             });
-
-            // Optionally filter or customize messages:
-            // var errors = result.Errors.Select(e => e.Description);
 
             return BadRequest(new
             {
@@ -61,6 +81,7 @@ public class AuthController : ControllerBase
             user.PersonId
         });
     }
+
 
 
     [HttpPost("login")]

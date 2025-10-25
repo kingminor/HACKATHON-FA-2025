@@ -29,7 +29,12 @@ form.addEventListener('submit', function(event) {
         sessionStorage.setItem("role", data.roles[0]);
         sessionStorage.setItem("jwt", data.token);
 
-        window.location.href = "./admin.html";
+        if(data.roles[0] === 'Admin'){
+            window.location.href = "./admin.html";
+        }
+        else{
+            window.location.href = "./home.html";
+        }
     })
     .catch(error => console.error(error));
 });
