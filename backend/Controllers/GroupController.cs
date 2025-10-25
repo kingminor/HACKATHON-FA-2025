@@ -13,6 +13,13 @@ public class GroupController : ControllerBase
 		_groupService = groupService;
 	}
 
+    [Authorize(Roles = "User,Admin")]
+    [HttpGet]
+	public ActionResult<Dictionary<Guid, Group>> GetAllGroups()
+	{
+		return _groupService.Groups;
+    }
+
     [Authorize(Roles = "Admin")]
     [HttpPost]
 	public ActionResult<Guid> CreateGroup([FromBody] string groupName)
