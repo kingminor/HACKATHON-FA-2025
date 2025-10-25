@@ -93,4 +93,17 @@ public class PersonService
         return people.Values.Where(p => p.GroupId == groupId).ToList();
     }
 
+    public List<LeaderboardEntry> GetLeaderboard()
+    {
+        return people.Values
+            .Select(p => new LeaderboardEntry
+            {
+                PersonId = p.Id,
+                GroupId = p.GroupId,
+                Points = p.Points
+            })
+            .OrderByDescending(e => e.Points)
+            .ToList();
+    }
+
 }
