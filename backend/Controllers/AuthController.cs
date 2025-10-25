@@ -14,10 +14,11 @@ public class AuthController : ControllerBase
     private readonly IConfiguration _configuration;
     private readonly PersonService _personService;
 
-    public AuthController(UserManager<ApplicationUser> userManager, IConfiguration configuration)
+    public AuthController(UserManager<ApplicationUser> userManager, IConfiguration configuration, PersonService personService)
     {
         _userManager = userManager;
         _configuration = configuration;
+        _personService = personService;
     }
 
     [Authorize(Roles = "Admin")]

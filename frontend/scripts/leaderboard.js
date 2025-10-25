@@ -40,10 +40,22 @@ function switchLeaderboard(e) {
     console.log(leaderboardId);
 }
 
-function leaderboardItemTemplate(data){
-    return ``
+function leaderboardItemTemplate(entry) {
+    return `
+    <div class="LeaderboardItem">
+        <div class="left">
+            <p class="username">${entry.name}</p>
+        </div>
+        <div class="right">
+            <p>${entry.points}</p>
+        </div>
+    </div>`;
 }
 
-function UpdateLeaderboard(){
 
+function UpdateLeaderboard(data) {
+    const container = document.querySelector("#leaderboardContainer");
+    container.innerHTML = data
+        .map((entry, index) => leaderboardItemTemplate(entry, index))
+        .join("");
 }

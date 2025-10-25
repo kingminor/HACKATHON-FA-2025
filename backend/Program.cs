@@ -71,7 +71,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// --- Apply migrations & seed default admin ---
+// --- Apply migrations & seed default roles and admin user ---
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -82,24 +82,24 @@ using (var scope = app.Services.CreateScope())
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 
-    // Ensure Admin role exists
-    if (!await roleManager.RoleExistsAsync("Admin"))
+    // Ensure required roles exist
+    string[] roles = new[] { "Admin", "User" };
+    foreach (var role in roles)
     {
-        await roleManager.CreateAsync(new IdentityRole("Admin"));
+        if (!await roleManager.RoleExistsAsync(role))
+        {
+            await roleManager.CreateAsync(new IdentityRole(role));
+        }
     }
 
     // Create default admin if it doesn't exist
     string adminUsername = "admin";
-    string adminPassword = "Admin123!"; // Most SecurePasswordEver
+    string adminPassword = "Admin123!";
 
     var adminUser = await userManager.FindByNameAsync(adminUsername);
     if (adminUser == null)
     {
-        adminUser = new ApplicationUser
-        {
-            UserName = adminUsername,
-        };
-
+        adminUser = new ApplicationUser { UserName = adminUsername };
         var result = await userManager.CreateAsync(adminUser, adminPassword);
         if (result.Succeeded)
         {
@@ -107,5 +107,6 @@ using (var scope = app.Services.CreateScope())
         }
     }
 }
+
 
 app.Run();
