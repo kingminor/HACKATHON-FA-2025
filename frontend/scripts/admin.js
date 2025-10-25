@@ -128,7 +128,8 @@ async function createGroup(name) {
     }
     let response = await authFetchPost("http://localhost:5094/group", options)
     let resJSON = await response.json();
-    //console.log(resJSON);
+    console.log(resJSON);
+    players[resJSON] = [];
     updateGroups();
 }
 
