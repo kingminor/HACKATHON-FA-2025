@@ -1,7 +1,7 @@
 import {authFetch, authFetchPost} from "./auth-helper.js";
 
-const players = authFetch("http://localhost:5094/person");
-console.log(players);
+let groups = {};
+let players = {};
 
 function groupClick(e) {
     let id = e.target.id;
@@ -10,11 +10,18 @@ function groupClick(e) {
 
 function setGroupModal(groupId) {
     const modal = document.querySelector(".groupManagerModal");
+    modal.querySelector("h3").innerText = groups[groupId].name;
+    modal.querySelector(".players").innerHTML = playerListDefault();
+    modal.querySelector(".players").innerHTML += players[groupId].map((player) => {
+        playerTemplate(player.id, player.name, player.tasks, player.points)
+    }).join("");
     modal.classList.remove("hide");
-
     modal.querySelectorAll(".playerName").forEach(playerName => {
         playerName._handler = toggleTasks;
         playerName.addEventListener("click", playerName._handler);
+    });
+    document.querySelector("#addPlayer").addEventListener("click", (e) => {
+        toggleAddPlayerForm(e);
     });
 
     const closeBtn = modal.querySelector(".groupTitle > p");
@@ -68,10 +75,9 @@ function setLeaderboard(e) {
 }
 
 async function init() {
-    await createGroup("beans");
-    let groups = await authFetch("http://localhost:5094/group");
-    let response = await groups.json();
-    console.log(response);
+    createPlayer("bobssss", "Bob1111!");
+    await updateGroups();
+    updatePlayers();
     document.querySelectorAll(".group").forEach(el => {
         el.addEventListener("click", (e) => groupClick(e))
     });
@@ -82,8 +88,22 @@ async function init() {
             leaderboard = setLeaderboard(e);
         })
     })
-    document.querySelector("#addPlayer").addEventListener("click", (e) => {
-        toggleAddPlayerForm(e);
+    document.querySelector(".openNewGroup").addEventListener("click", (e) => {
+        openNewGroup();
+    })
+}
+
+function openNewGroup() {
+    const modal = document.querySelector(".newGroupModal");
+    modal.classList.remove("hide");
+    modal.querySelector("p").addEventListener("click", e => {
+        modal.classList.add("hide");
+    })
+    modal.querySelector("form").addEventListener("submit", e => {
+        e.preventDefault();
+        const name = modal.querySelector("#groupName").value;
+        createGroup(name);
+        modal.classList.add("hide");
     })
 }
 
@@ -101,5 +121,99 @@ async function createGroup(name) {
     let response = await authFetchPost("http://localhost:5094/group", options)
     let resJSON = await response.json();
     console.log(resJSON);
+    updateGroups();
+}
+
+async function updateGroups() {
+    let response = await authFetch("http://localhost:5094/group");
+    console.log(response);
+    groups = await response.json();
+    console.log(groups);
+    displayGroups();
+}
+
+function groupTemplate(name, id) {
+    return `
+    <div class="group" id="${id}">
+        <p>${name}</p>
+    </div>
+    `
+}
+
+async function updatePlayers() {
+    const response = await authFetch("http://localhost:5094/person");
+    console.log(response);
+    const resJSON = await response.json();
+    console.log(resJSON);
+    Object.entries(groups).forEach(([groupKey]) => {
+        players[groupKey] = [];
+        Object.entries(resJSON).forEach(([key, value]) => {
+            if(value.groupId === groupKey) {
+                players[groupKey].push(value);
+            }
+        })
+    })
+    console.log(players);
+}
+
+function displayGroups() {
+    const groupList = document.querySelector(".groupViewer");
+    groupList.innerHTML = "";
+    Object.entries(groups).forEach(([key, value]) => {
+        groupList.innerHTML += groupTemplate(value.name, value.id);
+    })
+}
+
+function playerTemplate(name, id, tasks, points) {
+    return `
+    <div class="player" id="${id}">
+        <div class="playerName">
+            <p>${name}</p>
+            <svg fill="#000000" height="30px" width="30px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-20.47 -20.47 552.67 552.67" xml:space="preserve" stroke="#000000" stroke-width="20.981135000000002">
+                <path d="M508.788,371.087L263.455,125.753c-4.16-4.16-10.88-4.16-15.04,0L2.975,371.087c-4.053,4.267-3.947,10.987,0.213,15.04 c4.16,3.947,10.667,3.947,14.827,0l237.867-237.76l237.76,237.76c4.267,4.053,10.987,3.947,15.04-0.213 C512.734,381.753,512.734,375.247,508.788,371.087z"/>
+            </svg>
+        </div>
+        <ul class="tasks hide">
+            <li>eat 700 staplers (<span>700</span>)</li>
+            <li class="newTask"><a href="./task.html">+ New Task</a></li>
+        </ul>
+    </div>
+    `;
+}
+
+function playerListDefault() {
+    return `
+    <div class="player" id="addPlayer">
+        <p>+ Add Player</p>
+        <form class="hide addPlayerForm">
+            <div>
+                <label for="name">Player Name: </label>
+                <input type="text" name="name" id="name" placeholder="Player Name">
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password" placeholder="Password">
+            </div>
+            <button type="submit" class="addPlayerButton">Add Player</button>
+        </form>
+    </div>
+    `
+}
+
+async function createPlayer(username, password) {
+    const newUser = {
+        Username: username,
+        Password: password,
+        Role: "User"
+    };
+
+    const options = {
+        body: JSON.stringify(newUser)
+    };
+
+    const response = await authFetchPost("http://localhost:5094/auth/register", {body: JSON.stringify(newUser)});
+    console.log(response);
+    const resJSON = await response.json();
+    console.log(resJSON);
+    updatePlayers();
+
 }
 init();
