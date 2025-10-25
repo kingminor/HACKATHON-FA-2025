@@ -56,4 +56,32 @@ public class PersonController : ControllerBase
         return Ok($"Task '{task.Name}' added to person {id}.");
     }
 
+    [HttpPost("{id}/tasks/complete")]
+    public ActionResult CompleteTask(Guid id, [FromBody] string taskName)
+    {
+        if (string.IsNullOrWhiteSpace(taskName))
+        {
+            return BadRequest("Task name cannot be empty.");
+        }
+        bool success = _personService.CompletePersonTask(id, taskName);
+        if (!success)
+            return NotFound($"Person with ID {id} or task '{taskName}' not found.");
+        return Ok($"Task '{taskName}' marked as completed for person {id}.");
+    }
+
+    [HttpPost("assign-group/{personId}/{groupId}")]
+    public ActionResult AssignPersonToGroup(Guid personId, Guid groupId)
+    {
+        bool success = _personService.AssignPersonToGroup(personId, groupId);
+        if (!success) return NotFound($"Person {personId} not found.");
+        return Ok($"Person {personId} assigned to group {groupId}.");
+    }
+
+    [HttpGet("group/{groupId}")]
+    public ActionResult<List<Person>> GetPeopleByGroupId(Guid groupId)
+    {
+        var members = _personService.GetPeopleInGroup(groupId);
+        return Ok(members);
+    }
+
 }

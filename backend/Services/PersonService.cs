@@ -65,16 +65,32 @@ public class PersonService
 
     public bool CompletePersonTask(Guid id, string taskName)
     {
-        if (people.ContainsKey(id))
-        {
-            Person person = people[id];
-            Task? taskToComplete = person.tasks.FirstOrDefault(t => t.Name == taskName);
-            if (taskToComplete != null)
-            {
-                person.CompleteTask(taskToComplete);
-                return true;
-            }
-        }
-        return false;
+        if (!people.ContainsKey(id))
+            return false;
+
+        var person = people[id];
+
+        var taskToComplete = person.tasks
+            .FirstOrDefault(t => string.Equals(t.Name, taskName.Trim(), StringComparison.OrdinalIgnoreCase));
+
+        if (taskToComplete == null)
+            return false;
+
+        person.CompleteTask(taskToComplete);
+        return true;
     }
+
+    public bool AssignPersonToGroup(Guid personId, Guid groupId)
+    {
+        if (!people.ContainsKey(personId)) return false;
+
+        people[personId].GroupId = groupId;
+        return true;
+    }
+
+    public List<Person> GetPeopleInGroup(Guid groupId)
+    {
+        return people.Values.Where(p => p.GroupId == groupId).ToList();
+    }
+
 }

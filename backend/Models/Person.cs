@@ -8,6 +8,7 @@ public class Person
     public string Name { get; set; }
     public int Points { get; set; }
     public List<Task> tasks { get; set; }
+    public Guid? GroupId { get; set; }
 
     public Person(string name)
     {
