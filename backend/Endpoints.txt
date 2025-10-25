@@ -51,7 +51,6 @@ Response:
 Curl Example:
 curl -X GET "http://localhost:5094/person"
 
----------------------------------------------------
 2. Get Person By ID
 -------------------
 GET /person/{id}
@@ -73,7 +72,6 @@ Response:
 Curl Example:
 curl -X GET "http://localhost:5094/person/{personId}"
 
----------------------------------------------------
 3. Create a Person
 ------------------
 POST /person
@@ -92,7 +90,6 @@ Response:
 Curl Example:
 curl -X POST "http://localhost:5094/person" -H "Content-Type: application/json" -d "\"John Doe\""
 
----------------------------------------------------
 4. Add Task to Person
 ---------------------
 POST /person/{id}/tasks
@@ -116,7 +113,6 @@ Response:
 Curl Example:
 curl -X POST "http://localhost:5094/person/{personId}/tasks" -H "Content-Type: application/json" -d "{\"name\":\"Write Tests\",\"points\":20,\"isCompleted\":false}"
 
----------------------------------------------------
 5. Complete Task
 ----------------
 POST /person/{id}/tasks/complete
@@ -136,7 +132,6 @@ Response:
 Curl Example:
 curl -X POST "http://localhost:5094/person/{personId}/tasks/complete" -H "Content-Type: application/json" -d "\"Write Tests\""
 
----------------------------------------------------
 6. Assign Person to Group
 -------------------------
 POST /person/assign-group/{personId}/{groupId}
@@ -152,7 +147,6 @@ Response:
 Curl Example:
 curl -X POST "http://localhost:5094/person/assign-group/{personId}/{groupId}"
 
----------------------------------------------------
 7. Get People by Group ID
 -------------------------
 GET /person/group/{groupId}
@@ -160,7 +154,7 @@ GET /person/group/{groupId}
 Description: Retrieves all people belonging to a specific group.
 
 Response:
-- 200 OK:
+- 200 OK
 [
   {
     "id": "personId1",
@@ -186,6 +180,34 @@ Response:
 
 Curl Example:
 curl -X GET "http://localhost:5094/person/group/{groupId}"
+
+---------------------------------------------------
+LEADERBOARD ENDPOINT
+---------------------------------------------------
+
+1. Get Leaderboard
+------------------
+GET /leaderboard
+
+Description: Retrieves the leaderboard of all people sorted by points in descending order.
+
+Response:
+- 200 OK
+[
+  {
+    "name": "Jane Smith",
+    "points": 50,
+    "groupId": "groupId1"
+  },
+  {
+    "name": "John Doe",
+    "points": 20,
+    "groupId": "groupId2"
+  }
+]
+
+Curl Example:
+curl -X GET "http://localhost:5094/leaderboard"
 
 ---------------------------------------------------
 NOTES
