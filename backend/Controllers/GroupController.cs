@@ -13,6 +13,7 @@ public class GroupController : ControllerBase
 		_groupService = groupService;
 	}
 
+	// Gets All Groups 
     [Authorize(Roles = "User,Admin")]
     [HttpGet]
 	public ActionResult<Dictionary<Guid, Group>> GetAllGroups()
@@ -20,7 +21,8 @@ public class GroupController : ControllerBase
 		return _groupService.Groups;
     }
 
-	[Authorize(Roles = "User,Admin")]
+    // Gets Group by ID
+    [Authorize(Roles = "User,Admin")]
 	[HttpGet("{groupId}")]
 	public ActionResult<Group> GetGroupById(Guid groupId)
 	{
@@ -35,7 +37,8 @@ public class GroupController : ControllerBase
 		}
 	}
 
-	[Authorize(Roles = "Admin")]
+    // Create a Group
+    [Authorize(Roles = "Admin")]
     [HttpPost]
 	public ActionResult<Guid> CreateGroup([FromBody] string groupName)
 	{
