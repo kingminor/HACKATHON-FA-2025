@@ -1,11 +1,14 @@
+using System;
 using System.Collections.Generic;
-
+using System.Linq;
 
 public class Person
 {
+    public Guid Id { get; set; }
     public string Name { get; set; }
     public int Points { get; set; }
     public List<Task> tasks { get; set; }
+    public Guid? GroupId { get; set; }
 
     public Person(string name)
     {

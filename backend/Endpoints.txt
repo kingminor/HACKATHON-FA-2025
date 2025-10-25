@@ -1,0 +1,197 @@
+﻿API Documentation
+=================
+
+Base URL: http://localhost:5094
+
+---------------------------------------------------
+GROUP ENDPOINTS
+---------------------------------------------------
+
+1. Create a Group
+-----------------
+POST /group
+
+Description: Creates a new group and returns its GUID.
+
+Request Body:
+"Team Alpha"
+
+Response:
+- 201 Created:
+"326afa11-8db3-4bcb-84ec-ecad07ee3a9c"
+
+- 400 Bad Request if group name is empty:
+"Group name cannot be empty."
+
+Curl Example:
+curl -X POST "http://localhost:5094/group" -H "Content-Type: application/json" -d "\"Team Alpha\""
+
+---------------------------------------------------
+PERSON ENDPOINTS
+---------------------------------------------------
+
+1. Get All People
+-----------------
+GET /person
+
+Description: Retrieves all people in the system.
+
+Response:
+{
+  "personId1": {
+    "id": "personId1",
+    "name": "John Doe",
+    "points": 0,
+    "tasks": [],
+    "groupId": "groupId"
+  },
+  "personId2": { ... }
+}
+
+Curl Example:
+curl -X GET "http://localhost:5094/person"
+
+---------------------------------------------------
+2. Get Person By ID
+-------------------
+GET /person/{id}
+
+Description: Retrieves a single person by their GUID.
+
+Response:
+- 200 OK
+{
+  "id": "personId",
+  "name": "John Doe",
+  "points": 0,
+  "tasks": [],
+  "groupId": "groupId"
+}
+
+- 404 Not Found if the person does not exist.
+
+Curl Example:
+curl -X GET "http://localhost:5094/person/{personId}"
+
+---------------------------------------------------
+3. Create a Person
+------------------
+POST /person
+
+Description: Creates a new person and returns their GUID.
+
+Request Body:
+"John Doe"
+
+Response:
+- 201 Created:
+"person-guid"
+
+- 400 Bad Request if name is empty.
+
+Curl Example:
+curl -X POST "http://localhost:5094/person" -H "Content-Type: application/json" -d "\"John Doe\""
+
+---------------------------------------------------
+4. Add Task to Person
+---------------------
+POST /person/{id}/tasks
+
+Description: Adds a task to a specific person.
+
+Request Body:
+{
+  "name": "Write Tests",
+  "points": 20,
+  "isCompleted": false
+}
+
+Response:
+- 200 OK:
+"Task 'Write Tests' added to person {id}."
+
+- 400 Bad Request if task name is missing or points ≤ 0.
+- 404 Not Found if person ID does not exist.
+
+Curl Example:
+curl -X POST "http://localhost:5094/person/{personId}/tasks" -H "Content-Type: application/json" -d "{\"name\":\"Write Tests\",\"points\":20,\"isCompleted\":false}"
+
+---------------------------------------------------
+5. Complete Task
+----------------
+POST /person/{id}/tasks/complete
+
+Description: Marks a specific task as completed for a person.
+
+Request Body:
+"Write Tests"
+
+Response:
+- 200 OK:
+"Task 'Write Tests' marked as completed for person {id}."
+
+- 400 Bad Request if task name is empty.
+- 404 Not Found if person or task does not exist.
+
+Curl Example:
+curl -X POST "http://localhost:5094/person/{personId}/tasks/complete" -H "Content-Type: application/json" -d "\"Write Tests\""
+
+---------------------------------------------------
+6. Assign Person to Group
+-------------------------
+POST /person/assign-group/{personId}/{groupId}
+
+Description: Assigns a person to a specific group.
+
+Response:
+- 200 OK:
+"Person {personId} assigned to group {groupId}."
+
+- 404 Not Found if person does not exist.
+
+Curl Example:
+curl -X POST "http://localhost:5094/person/assign-group/{personId}/{groupId}"
+
+---------------------------------------------------
+7. Get People by Group ID
+-------------------------
+GET /person/group/{groupId}
+
+Description: Retrieves all people belonging to a specific group.
+
+Response:
+- 200 OK:
+[
+  {
+    "id": "personId1",
+    "name": "John Doe",
+    "points": 0,
+    "tasks": [],
+    "groupId": "groupId"
+  },
+  {
+    "id": "personId2",
+    "name": "Jane Smith",
+    "points": 10,
+    "tasks": [
+      {
+        "name": "Write Tests",
+        "points": 10,
+        "isCompleted": true
+      }
+    ],
+    "groupId": "groupId"
+  }
+]
+
+Curl Example:
+curl -X GET "http://localhost:5094/person/group/{groupId}"
+
+---------------------------------------------------
+NOTES
+---------------------------------------------------
+- All GUIDs are returned as strings.
+- Points are accumulated when tasks are completed.
+- Each person can belong to exactly one group.
+- Tasks are stored per person; there is no global task list.
+- Use Content-Type: application/json for all POST requests.
