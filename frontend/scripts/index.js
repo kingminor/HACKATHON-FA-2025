@@ -26,6 +26,8 @@ form.addEventListener('submit', function(event) {
         console.log("JWT Token: ", data.token);
 
         sessionStorage.setItem("jwt", data.token);
+
+        window.location.href = "./admin.html";
     })
     .catch(error => console.error(error));
 });

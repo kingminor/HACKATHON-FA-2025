@@ -1,3 +1,8 @@
+import { authFetch } from "./auth-helper";
+
+const players = authFetch("http://localhost/person");
+console.log(players);
+
 function groupClick(e) {
     let id = e.target.id;
     setGroupModal(id);

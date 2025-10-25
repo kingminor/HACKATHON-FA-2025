@@ -1,8 +1,11 @@
+import { authFetch } from "./auth-helper";
+
 let params = new URLSearchParams(window.location.search);
 
 let selectedLeaderboard = params.get("type");
 document.querySelector(`.${selectedLeaderboard}`).id = "selected";
 console.log(selectedLeaderboard);
+authFetch("http://localhost:5094/leaderboard")
 
 document.querySelectorAll(".leaderboard").forEach((el) => {
     el.addEventListener("click", (e) => {
