@@ -15,3 +15,8 @@
     --white: #f6fffb;
     --dark-color: #464e47;
 }
+
+.hide {
+    height: 0;
+    overflow: hidden;
+}

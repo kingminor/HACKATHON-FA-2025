@@ -104,3 +104,30 @@ main {
         color: var(--dark-color);
     }
 }
+
+.groupManager {
+    background-color: var(--accent3-color);
+    width: 80%;
+    height: 80%;
+    position: fixed;
+    top: 10%;
+    left: 10%;
+    color: black;
+    .players {
+        width: 90%;
+        height: 80%;
+        margin: auto;
+        padding-top: 0.5%;
+    }
+}
+
+ul {
+    list-style-type: none;
+}
+
+.player {
+    background-color: var(--primary-color);
+    padding: 1%;
+    margin: 2%;
+    border-radius: 10px;
+}
