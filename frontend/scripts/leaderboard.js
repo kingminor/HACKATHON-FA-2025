@@ -5,9 +5,9 @@ let selectedLeaderboard = params.get("type") || "playerGlobal"; // default to pl
 
 // Map HTML classes to API leaderboard types
 const classMap = {
-    group: "playerGroup",      // ✅ show members of the user's group
-    groupGlobal: "groupGlobal",// ✅ show all groups globally
-    playerGlobal: "playerGlobal" // ✅ show all players globally
+    group: "playerGroup",
+    groupGlobal: "groupGlobal",
+    playerGlobal: "playerGlobal"
 };
 
 // Set initial selected element

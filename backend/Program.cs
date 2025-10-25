@@ -3,8 +3,19 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.IO;
+
 
 var builder = WebApplication.CreateBuilder(args);
+
+var dbPath = Path.Combine(AppContext.BaseDirectory, "backend.db");
+
+// Delete DB file if it exists
+if (File.Exists(dbPath))
+{
+    File.Delete(dbPath);
+    Console.WriteLine("Deleted existing backend.db file.");
+}
 
 // --- Add DbContext ---
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
