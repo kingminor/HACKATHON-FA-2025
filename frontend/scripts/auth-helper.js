@@ -9,3 +9,14 @@ export const authFetch = (url, options = {}) =>
 
     return fetch(url, { ...options, headers});
 };
+
+export const authFetchPost = (url, options = {}) =>
+{
+    const token = sessionStorage.getItem("jwt") || "";
+    const headers = {
+        ...options.headers,
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+    };
+    return fetch(url, { ...options, headers, method: "POST"});
+}

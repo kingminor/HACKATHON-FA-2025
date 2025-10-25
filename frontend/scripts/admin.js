@@ -1,4 +1,4 @@
-import { authFetch } from "./auth-helper.js";
+import {authFetch, authFetchPost} from "./auth-helper.js";
 
 const players = authFetch("http://localhost:5094/person");
 console.log(players);
@@ -68,8 +68,10 @@ function setLeaderboard(e) {
 }
 
 async function init() {
+    await createGroup("beans");
     let groups = await authFetch("http://localhost:5094/group");
-    console.log(groups.json());
+    let response = await groups.json();
+    console.log(response);
     document.querySelectorAll(".group").forEach(el => {
         el.addEventListener("click", (e) => groupClick(e))
     });
@@ -91,4 +93,13 @@ function toggleAddPlayerForm(e) {
     document.querySelector("#addPlayer").removeEventListener("click", toggleAddPlayerForm);
 }
 
+
+async function createGroup(name) {
+    let options = {
+        body: JSON.stringify(name)
+    }
+    let response = await authFetchPost("http://localhost:5094/group", options)
+    let resJSON = await response.json();
+    console.log(resJSON);
+}
 init();
