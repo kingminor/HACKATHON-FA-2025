@@ -1,4 +1,4 @@
-@import "/frontend/styles/styles.css";
+@import "./styles.css";
 main {
     background-color: var(--secondary-color);
     display: flex;
@@ -41,4 +41,11 @@ input {
 button:hover {
     border: 3px solid var(--dark-color);
     background-color: var(--accent-color);
+}
+
+@media screen and (max-width: 800px) {
+    form {
+        width: 80%;
+        padding: 5%;
+    }
 }
