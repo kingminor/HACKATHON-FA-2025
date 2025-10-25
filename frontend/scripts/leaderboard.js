@@ -5,7 +5,10 @@ let params = new URLSearchParams(window.location.search);
 let selectedLeaderboard = params.get("type");
 document.querySelector(`.${selectedLeaderboard}`).id = "selected";
 console.log(selectedLeaderboard);
-authFetch("http://localhost:5094/leaderboard")
+const leaderboard = await authFetch("http://localhost:5094/leaderboard");
+const players = await authFetch("http://localhost:5094/person");
+console.log(leaderboard);
+console.log(players);
 
 document.querySelectorAll(".leaderboard").forEach((el) => {
     el.addEventListener("click", (e) => {
@@ -35,4 +38,12 @@ function switchLeaderboard(e) {
     return leaderboardId;
 
     console.log(leaderboardId);
+}
+
+function leaderboardItemTemplate(data){
+    
+}
+
+function UpdateLeaderboard(){
+
 }

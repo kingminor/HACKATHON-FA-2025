@@ -108,7 +108,7 @@ public class PersonController : ControllerBase
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpPost("person/{personId}/groups/{groupId}")]
+    [HttpPost("{personId}/groups/{groupId}")]
     public ActionResult AssignPersonToGroup(Guid personId, Guid groupId)
     {
         bool success = _personService.AssignPersonToGroup(personId, groupId);
@@ -117,7 +117,7 @@ public class PersonController : ControllerBase
     }
 
     [Authorize(Roles = "Admin")]
-    [HttpPost("person/{personId}/groups/remove")]
+    [HttpPost("{personId}/groups/remove")]
     public ActionResult RemovePersonFromGroup(Guid personId)
     {
         bool success = _personService.RemovePersonFromGroup(personId);
