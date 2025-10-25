@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+
 
 [ApiController]
 [Route("group")]
@@ -11,7 +13,8 @@ public class GroupController : ControllerBase
 		_groupService = groupService;
 	}
 
-	[HttpPost]
+    [Authorize(Roles = "Admin")]
+    [HttpPost]
 	public ActionResult<Guid> CreateGroup([FromBody] string groupName)
 	{
 		if (string.IsNullOrWhiteSpace(groupName))

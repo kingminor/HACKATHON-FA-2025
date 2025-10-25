@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+
 
 [ApiController]
 [Route("person")]
@@ -6,17 +8,21 @@ public class PersonController : ControllerBase
 {
     private readonly PersonService _personService;
 
+    // Constructor
     public PersonController(PersonService personService)
     {
         _personService = personService;
     }
 
+    // Gets all people
+    [Authorize(Roles = "User,Admin")]
     [HttpGet]
     public ActionResult<Dictionary<Guid, Person>> GetAll()
     {
         return _personService.GetAllPeople();
     }
 
+    [Authorize(Roles = "User,Admin")]
     [HttpGet("{id}")]
     public ActionResult<Person> GetPersonById(Guid id)
     {
@@ -28,6 +34,7 @@ public class PersonController : ControllerBase
         return person;
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     public ActionResult<Guid> CreatePerson([FromBody] string name)
     {
@@ -40,6 +47,7 @@ public class PersonController : ControllerBase
         return CreatedAtAction(nameof(GetPersonById), new { id }, id);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("{id}/tasks")]
     public ActionResult AddTaskToPerson(Guid id, [FromBody] Task task)
     {
@@ -56,6 +64,7 @@ public class PersonController : ControllerBase
         return Ok($"Task '{task.Name}' added to person {id}.");
     }
 
+    [Authorize(Roles = "User,Admin")]
     [HttpPost("{id}/tasks/complete")]
     public ActionResult CompleteTask(Guid id, [FromBody] string taskName)
     {
@@ -69,6 +78,7 @@ public class PersonController : ControllerBase
         return Ok($"Task '{taskName}' marked as completed for person {id}.");
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPost("assign-group/{personId}/{groupId}")]
     public ActionResult AssignPersonToGroup(Guid personId, Guid groupId)
     {
@@ -77,6 +87,7 @@ public class PersonController : ControllerBase
         return Ok($"Person {personId} assigned to group {groupId}.");
     }
 
+    [Authorize(Roles = "User,Admin")]
     [HttpGet("group/{groupId}")]
     public ActionResult<List<Person>> GetPeopleByGroupId(Guid groupId)
     {
