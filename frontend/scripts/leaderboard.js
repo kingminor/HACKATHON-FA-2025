@@ -1,37 +1,29 @@
 import { authFetch } from "./auth-helper.js";
 
 let params = new URLSearchParams(window.location.search);
-let selectedLeaderboard = params.get("type") || "playerGlobal";
+let selectedLeaderboard = params.get("type") || "playerGlobal"; // default to playerGlobal
 
-// Set initial selected
-document.querySelector(`.${selectedLeaderboard}`).id = "selected";
-
-async function loadLeaderboard(type, groupId = null) {
-    let url;
-    if (type === "playerGlobal") {
-        url = "http://localhost:5094/leaderboard/people/global";
-    } else if (type === "groupGlobal") {
-        url = "http://localhost:5094/leaderboard/groups/global";
-    } else if (type === "group") {
-        if (!groupId) return; // need a groupId
-        url = `http://localhost:5094/leaderboard/people/group/${groupId}`;
-    } else {
-        return;
-    }
-
-    const data = await authFetch(url);
-    UpdateLeaderboard(data);
+// Only set ID if that element exists
+const selectedEl = document.querySelector(`.${selectedLeaderboard}`);
+if (selectedEl) {
+    selectedEl.id = "selected";
+} else {
+    console.warn(`No element found for .${selectedLeaderboard}`);
 }
 
-// Initial load
-loadLeaderboard(selectedLeaderboard);
+console.log("Selected leaderboard:", selectedLeaderboard);
 
-// Handle tab clicks
+// Fetch data
+const response = await authFetch("http://localhost:5094/leaderboard/people/global");
+const globalLeaderboard = response.json ? await response.json() : response;
+
+console.log(globalLeaderboard);
+UpdateLeaderboard(globalLeaderboard);
+
+// Event listeners
 document.querySelectorAll(".leaderboard").forEach((el) => {
     el.addEventListener("click", (e) => {
         selectedLeaderboard = switchLeaderboard(e);
-        // For group leaderboard, you need to pass groupId if required
-        loadLeaderboard(selectedLeaderboard);
     });
 });
 
@@ -39,9 +31,10 @@ function switchLeaderboard(e) {
     const selectedElement = e.target.closest(".leaderboard");
     const leaderboardId = selectedElement.classList[1];
 
-    document.querySelectorAll(".leaderboard").forEach(el => el.id = "");
+    document.querySelectorAll(".leaderboard").forEach((el) => (el.id = ""));
     selectedElement.id = "selected";
 
+    console.log("Switched to:", leaderboardId);
     return leaderboardId;
 }
 
@@ -58,6 +51,6 @@ function leaderboardItemTemplate(entry) {
 }
 
 function UpdateLeaderboard(data) {
-    const container = document.querySelector("#leaderboardContainer");
-    container.innerHTML = data.map(leaderboardItemTemplate).join("");
+    const container = document.querySelector("main");
+    container.innerHTML = data.map((entry) => leaderboardItemTemplate(entry)).join("");
 }
