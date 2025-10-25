@@ -2,8 +2,130 @@
 
 body {
     background-color: var(--white);
+    overflow-y: hidden;
+    height: 100vh;
 }
 
 header {
     background-color: var(--primary-color);
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--dark-color);
+    a, h1 {
+        padding-right: 2%;
+        padding-left: 1%;
+    }
+    svg > path {
+        stroke: var(--dark-color);
+    }
+}
+
+main {
+    display: grid;
+    grid-template-columns: 15% auto;
+    height: calc(100vh - 70px);
+}
+
+.sidebar {
+    background-color: var(--primary-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: calc(100vh - 70px);
+    align-items: center;
+    .ranking {
+        margin: auto;
+        border-radius: 50%;
+        aspect-ratio: 1 / 1;
+        max-width: 100%;
+        background-color: var(--secondary-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        p {
+            font-size: 3rem;
+        }
+    }
+    .leaderboard > p{
+        text-align: center;
+        font-size: 1.5rem;
+    }
+    .leaderboard {
+        width: 70%;
+        text-decoration: none;
+        color: var(--dark-color);
+    }
+}
+
+.todoItem {
+    display: flex;
+    background-color: var(--accent-color);
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-top: 1%;
+    border-radius: 10px;
+    padding: 0.3%;
+
+    p {
+        margin: auto 0;
+        margin-left: 2%;
+        font-size: 1.2rem;
+    }
+    svg {
+        cursor: pointer;
+        path {
+            stroke: var(--dark-color);
+        }
+    }
+    svg:hover {
+        path {
+            stroke: green;
+        }
+    }
+}
+
+.todoItem.completed {
+    opacity: 50%;
+    position: relative;
+    svg {
+        cursor: auto;
+    }
+    svg:hover {
+        path {
+            stroke: var(--dark-color);
+        }
+    }
+}
+
+.todoItem.completed::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 102%;
+    height: 2px;
+    background-color: var(--dark-color);
+    pointer-events: none;
+    left: -1%;
+}
+
+.todo {
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    h2 {
+        margin: 1% 2% 0;
+        margin-bottom: 1%;
+        font-size: 1.5rem;
+    }
+    .todoList {
+        flex: 1;
+        overflow: auto;
+        padding-bottom: 1%;
+        .todoItem:first-child {
+            margin-top: 0;
+        }
+    }
 }

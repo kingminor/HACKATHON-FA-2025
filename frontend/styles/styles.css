@@ -1,11 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
 * {
     margin: 0;
     padding: 0;
+    font-family: 'Roboto Condensed', sans-serif;
+    color: var(--dark-color);
 }
 :root {
     --primary-color: #ccfccb;
     --secondary-color: #f1fffa;
     --accent-color: #96e6b3;
-    --accent2-color: #96e6b3
+    --accent2-color: #96e6b3;
     --white: #f6fffb;
+    --dark-color: #464e47;
 }
