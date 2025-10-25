@@ -1,4 +1,8 @@
-let selectedLeaderboard = "group";
+let params = new URLSearchParams(window.location.search);
+
+let selectedLeaderboard = params.get("type");
+document.querySelector(`.${selectedLeaderboard}`).id = "selected";
+console.log(selectedLeaderboard);
 
 document.querySelectorAll(".leaderboard").forEach((el) => {
     el.addEventListener("click", (e) => {

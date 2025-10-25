@@ -109,10 +109,11 @@ main {
     background-color: var(--accent3-color);
     width: 80%;
     height: 80%;
-    position: fixed;
+    position: absolute;
     top: 10%;
     left: 10%;
     color: black;
+    border-radius: 10px;
     .players {
         width: 90%;
         height: 80%;
@@ -130,4 +131,115 @@ ul {
     padding: 1%;
     margin: 2%;
     border-radius: 10px;
+}
+
+.playerName {
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    font-size: 1.7rem;
+    margin-bottom: 0.5%;
+    svg > path {
+        stroke: var(--dark-color);
+    }
+    svg {
+        transition: transform 0.3s;
+    }
+}
+#addPlayer > p{
+    font-weight: bold;
+    font-size: 1.7rem;
+}
+.tasks {
+    background-color: var(--secondary-color);
+    border-radius: 10px;
+    max-height: 100%;
+    /*transition: max-height 0.5s;*/
+    li {
+        text-align: center;
+        padding: 0.5%;
+        font-size: 1.3rem;
+        border-bottom: 1px solid var(--dark-color);
+        margin-left: 0.5%;
+        margin-right: 0.5%;
+    }
+    li:last-child {
+        border-bottom: none;
+        cursor: pointer;
+        font-weight: bold;
+        a {
+            text-decoration: none;
+        }
+    }
+}
+
+.groupManagerModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    transition: opacity 0.2s;
+    opacity: 1;
+}
+
+.groupTitle {
+    display: flex;
+    justify-content: space-between;
+    padding: 1%;
+    h3, p {
+        color: black;
+        font-size: 1.7rem;
+    }
+    p {
+        cursor: pointer;
+    }
+}
+
+.hide {
+    max-height: 0;
+    overflow-y: hidden;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.rotated {
+    transform: rotate(180deg);
+    transform-origin: center;
+    transition: transform 0.3s;
+}
+
+.addPlayerForm {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    div {
+        margin-top: 1%;
+        height: 40px;
+        font-size: 1.5rem;
+        label {
+            margin: auto;
+        }
+        input {
+            height: 35px;
+            font-size: 1.2rem;
+        }
+    }
+    button {
+        margin: auto;
+        margin-top:1%;
+        width: 70%;
+        height: 40px;
+        font-size: 1.2rem;
+        background-color: var(--accent2-color);
+        border: 2px solid var(--accent2-color);
+        border-radius: 10px;
+        cursor: pointer;
+        color: var(--dark-color);
+    }
+    button:hover {
+        background-color: var(--primary-color);
+        border: 2px solid var(--accent3-color);
+    }
 }
