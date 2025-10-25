@@ -12,7 +12,7 @@ const classMap = {
 
 // Set initial selected element
 const selectedEl = document.querySelector(
-    `.${Object.keys(classMap).find(k => classMap[k] === selectedLeaderboard)}`
+    `.${selectedLeaderboard}`
 );
 if (selectedEl) {
     selectedEl.id = "selected";
@@ -51,7 +51,7 @@ async function loadLeaderboard(type) {
         case "playerGlobal":
             url = "http://localhost:5094/leaderboard/people/global";
             break;
-        case "playerGroup":
+        case "group":
             if (!groupId) {
                 console.warn("No groupId found in sessionStorage");
                 UpdateLeaderboard([]);
