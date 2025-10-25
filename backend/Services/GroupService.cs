@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 public class GroupService
 {
@@ -17,5 +18,14 @@ public class GroupService
         return Groups.Remove(id);
     }
 
-    public Group? GetGroup(Guid id) => Groups.TryGetValue(id, out var group) ? group : null;
+    public Group? GetGroup(Guid id)
+    {
+        return Groups.TryGetValue(id, out var group) ? group : null;
+    }
+
+    // Just move GetAllGroups here
+    public List<Group> GetAllGroups()
+    {
+        return Groups.Values.ToList();
+    }
 }

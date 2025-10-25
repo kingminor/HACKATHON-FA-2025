@@ -113,9 +113,10 @@ public class PersonService
         return people.Values.Where(p => p.GroupId == groupId).ToList();
     }
 
-    public List<LeaderboardEntry> GetLeaderboard()
+    public List<LeaderboardEntry> GetGlobalPlayerLeaderboard()
     {
         return people.Values
+            .OrderByDescending(p => p.Points)
             .Select(p => new LeaderboardEntry
             {
                 PersonId = p.Id,
@@ -123,8 +124,41 @@ public class PersonService
                 Points = p.Points,
                 Name = p.Name
             })
+            .ToList();
+    }
+
+    public List<LeaderboardEntry> GetGroupPlayerLeaderboard(Guid groupId)
+    {
+        return people.Values
+            .Where(p => p.GroupId == groupId)
+            .OrderByDescending(p => p.Points)
+            .Select(p => new LeaderboardEntry
+            {
+                PersonId = p.Id,
+                GroupId = p.GroupId,
+                Points = p.Points,
+                Name = p.Name
+            })
+            .ToList();
+    }
+
+
+    public List<LeaderboardEntry> GetGlobalGroupLeaderboard(List<Group> groups)
+    {
+        return groups
+            .Select(g => new LeaderboardEntry
+            {
+                PersonId = Guid.Empty,   // Not a person, it's a group
+                GroupId = g.Id,
+                Name = g.Name,
+                Points = people.Values
+                            .Where(p => p.GroupId == g.Id)
+                            .Sum(p => p.Points)
+            })
             .OrderByDescending(e => e.Points)
             .ToList();
     }
+
+
 
 }

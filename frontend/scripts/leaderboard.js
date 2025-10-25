@@ -1,4 +1,4 @@
-import { authFetch } from "./auth-helper";
+import { authFetch } from "./auth-helper.js";
 
 let params = new URLSearchParams(window.location.search);
 
