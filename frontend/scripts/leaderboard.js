@@ -1,43 +1,48 @@
 import { authFetch } from "./auth-helper.js";
 
 let params = new URLSearchParams(window.location.search);
+let selectedLeaderboard = params.get("type") || "playerGlobal";
 
-let selectedLeaderboard = params.get("type");
+// Set initial selected
 document.querySelector(`.${selectedLeaderboard}`).id = "selected";
-console.log(selectedLeaderboard);
-const leaderboard = await authFetch("http://localhost:5094/leaderboard");
-const players = await authFetch("http://localhost:5094/person");
-console.log(leaderboard);
-console.log(players);
 
+async function loadLeaderboard(type, groupId = null) {
+    let url;
+    if (type === "playerGlobal") {
+        url = "http://localhost:5094/leaderboard/people/global";
+    } else if (type === "groupGlobal") {
+        url = "http://localhost:5094/leaderboard/groups/global";
+    } else if (type === "group") {
+        if (!groupId) return; // need a groupId
+        url = `http://localhost:5094/leaderboard/people/group/${groupId}`;
+    } else {
+        return;
+    }
+
+    const data = await authFetch(url);
+    UpdateLeaderboard(data);
+}
+
+// Initial load
+loadLeaderboard(selectedLeaderboard);
+
+// Handle tab clicks
 document.querySelectorAll(".leaderboard").forEach((el) => {
     el.addEventListener("click", (e) => {
         selectedLeaderboard = switchLeaderboard(e);
-    })
-})
-
+        // For group leaderboard, you need to pass groupId if required
+        loadLeaderboard(selectedLeaderboard);
+    });
+});
 
 function switchLeaderboard(e) {
     const selectedElement = e.target.closest(".leaderboard");
     const leaderboardId = selectedElement.classList[1];
 
-    if(leaderboardId === "group") {
-        document.querySelector(".groupGlobal").id = "";
-        document.querySelector(".playerGlobal").id = "";
-        document.querySelector(".group").id = "selected";
-    } else if (leaderboardId === "groupGlobal") {
-        document.querySelector(".group").id = "";
-        document.querySelector(".playerGlobal").id = "";
-        document.querySelector(".groupGlobal").id = "selected";
-    } else {
-        document.querySelector(".groupGlobal").id = "";
-        document.querySelector(".group").id = "";
-        document.querySelector(".playerGlobal").id = "selected";
-    }
+    document.querySelectorAll(".leaderboard").forEach(el => el.id = "");
+    selectedElement.id = "selected";
 
     return leaderboardId;
-
-    console.log(leaderboardId);
 }
 
 function leaderboardItemTemplate(entry) {
@@ -52,10 +57,7 @@ function leaderboardItemTemplate(entry) {
     </div>`;
 }
 
-
 function UpdateLeaderboard(data) {
     const container = document.querySelector("#leaderboardContainer");
-    container.innerHTML = data
-        .map((entry, index) => leaderboardItemTemplate(entry, index))
-        .join("");
+    container.innerHTML = data.map(leaderboardItemTemplate).join("");
 }
