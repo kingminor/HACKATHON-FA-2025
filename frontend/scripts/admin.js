@@ -86,6 +86,7 @@ function setLeaderboard(e) {
 async function init() {
     //createPlayer("bobbb", "Bob1111!", "15e6cf57-d69f-4c13-916d-a710e76d97e7");
     await updateGroups();
+    initGroupClickListener();
     updatePlayers();
     let leaderboard = "groups";
     document.querySelector(".groups").id = "selected";
@@ -97,11 +98,7 @@ async function init() {
     document.querySelector(".openNewGroup").addEventListener("click", (e) => {
         openNewGroup();
     })
-}
-
-function openNewGroup() {
     const modal = document.querySelector(".newGroupModal");
-    modal.classList.remove("hide");
     modal.querySelector("p").addEventListener("click", e => {
         modal.classList.add("hide");
     })
@@ -111,6 +108,11 @@ function openNewGroup() {
         createGroup(name);
         modal.classList.add("hide");
     })
+}
+
+function openNewGroup() {
+    const modal = document.querySelector(".newGroupModal");
+    modal.classList.remove("hide");
 }
 
 function toggleAddPlayerForm(e) {
@@ -165,17 +167,11 @@ async function updatePlayers() {
 }
 
 function displayGroups() {
-    document.querySelectorAll(".group").forEach(el => {
-        el.removeEventListener("click", (e) => groupClick(e))
-    });
     const groupList = document.querySelector(".groupViewer");
     groupList.innerHTML = "";
     Object.entries(groups).forEach(([key, value]) => {
         groupList.innerHTML += groupTemplate(value.name, value.id);
     })
-    document.querySelectorAll(".group").forEach(el => {
-        el.addEventListener("click", (e) => groupClick(e))
-    });
 }
 
 function playerTemplate(name, id, tasks, points) {
@@ -195,6 +191,15 @@ function playerTemplate(name, id, tasks, points) {
         </ul>
     </div>
     `;
+}
+
+function initGroupClickListener() {
+    const groupList = document.querySelector(".groupViewer");
+    groupList.addEventListener("click", (e) => {
+        const groupEl = e.target.closest(".group");
+        if (!groupEl) return;
+        setGroupModal(groupEl.id);
+    });
 }
 
 function taskTemplate(name, points, isComplete) {
