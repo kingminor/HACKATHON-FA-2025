@@ -198,7 +198,7 @@ function playerTemplate(name, id, tasks, points) {
 }
 
 function taskTemplate(name, points, isComplete) {
-    return `<li class=${isComplete ? '' : 'active'}>${name} (<span>${points}</span>)</li>`;
+    return `<li class=${isComplete ? 'done' : ''}>${name} (<span>${points}</span>)</li>`;
 }
 
 function playerListDefault() {

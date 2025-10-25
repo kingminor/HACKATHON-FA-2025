@@ -163,13 +163,18 @@ ul {
         margin-left: 0.5%;
         margin-right: 0.5%;
     }
-    li:last-child {
-        border-bottom: none;
+    li:first-child {
         cursor: pointer;
         font-weight: bold;
         a {
             text-decoration: none;
         }
+    }
+    li:last-child {
+        border: none;
+    }
+    li.done {
+        text-decoration: line-through;
     }
 }
 
@@ -310,4 +315,8 @@ ul {
     overflow-y: hidden;
     pointer-events: none;
     opacity: 0;
+}
+
+.newTask > a{
+    text-decoration: none;
 }
