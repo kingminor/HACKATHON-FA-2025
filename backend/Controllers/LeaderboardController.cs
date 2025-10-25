@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
+
+[Authorize(Roles = "User,Admin")]
 [ApiController]
 [Route("leaderboard")]
 public class LeaderboardController : ControllerBase
