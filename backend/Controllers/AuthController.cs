@@ -94,13 +94,27 @@ public class AuthController : ControllerBase
         var roles = await _userManager.GetRolesAsync(user);
         var token = GenerateJwtToken(user, roles);
 
+        Guid? groupId = null;
+
+        // Fetch the group ID from the PersonService if PersonId exists
+        if (user.PersonId.HasValue)
+        {
+            var person = _personService.GetPerson(user.PersonId.Value);
+            if (person != null)
+            {
+                groupId = person.GroupId;
+            }
+        }
+
         return Ok(new
         {
             Token = token,
             Roles = roles,
-            PersonId = user.PersonId
+            PersonId = user.PersonId,
+            GroupId = groupId
         });
     }
+
 
     [HttpGet("getpersonid")]
     public async Task<IActionResult> GetPersonId([FromQuery] string username)

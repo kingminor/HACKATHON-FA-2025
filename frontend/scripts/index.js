@@ -28,6 +28,7 @@ form.addEventListener('submit', function(event) {
         sessionStorage.setItem("personId", data.personId);
         sessionStorage.setItem("role", data.roles[0]);
         sessionStorage.setItem("jwt", data.token);
+        sessionStorage.setItem("groupId", data.groupId)
 
         if(data.roles[0] === 'Admin'){
             window.location.href = "./admin.html";
