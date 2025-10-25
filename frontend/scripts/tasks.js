@@ -20,9 +20,10 @@ async function init() {
 
         const response = await authFetchPost(`http://localhost:5094/person/${userId}/tasks`, options);
 
-        const resJSON = await response.json()
+        //const resJSON = await response.json()
 
-        console.log(resJSON);
+        //console.log(resJSON);
+        window.location.href = "./admin.html";
     })
 }
 
