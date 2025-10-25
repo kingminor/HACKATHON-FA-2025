@@ -12,6 +12,6 @@ header {
     height: 100%;
 }
 .leaderboard {
-    display: inline;
+    display: block;
     background-color: red;
 }
