@@ -126,7 +126,7 @@ async function createGroup(name) {
     let options = {
         body: JSON.stringify(name)
     }
-    let response = await authFetchPost("http://localhost:5094/group", options)
+    let response = await authFetchPost("https://api.pleaseletus.win/group", options)
     let resJSON = await response.json();
     console.log(resJSON);
     players[resJSON] = [];
@@ -134,7 +134,7 @@ async function createGroup(name) {
 }
 
 async function updateGroups() {
-    let response = await authFetch("http://localhost:5094/group");
+    let response = await authFetch("https://api.pleaseletus.win/group");
     //console.log(response);
     groups = await response.json();
     //console.log(groups);
@@ -150,7 +150,7 @@ function groupTemplate(name, id) {
 }
 
 async function updatePlayers() {
-    const response = await authFetch("http://localhost:5094/person");
+    const response = await authFetch("https://api.pleaseletus.win/person");
     console.log(response);
     const resJSON = await response.json();
     console.log(resJSON);
@@ -235,12 +235,12 @@ async function createPlayer(username, password, groupId) {
         body: JSON.stringify(newUser)
     };
 
-    const response = await authFetchPost("http://localhost:5094/auth/register", {body: JSON.stringify(newUser)});
+    const response = await authFetchPost("https://api.pleaseletus.win/auth/register", {body: JSON.stringify(newUser)});
     //console.log(response);
     const resJSON = await response.json();
     //console.log(resJSON);
 
-    const response2 = await authFetchPost(`http://localhost:5094/person/${resJSON.personId}/groups/${groupId}`, {body: JSON.stringify("")});
+    const response2 = await authFetchPost(`https://api.pleaseletus.win/person/${resJSON.personId}/groups/${groupId}`, {body: JSON.stringify("")});
     document.querySelector(".groupManagerModal").classList.add("hide");
     await updatePlayers();
     //await window.location.reload();

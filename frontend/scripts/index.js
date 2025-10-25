@@ -11,7 +11,7 @@ form.addEventListener('submit', function(event) {
         password: password.value
     }
     
-    fetch("http://localhost:5094/auth/login", {
+    fetch("https://api.pleaseletus.win/auth/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

@@ -49,7 +49,7 @@ async function loadLeaderboard(type) {
 
     switch (type) {
         case "playerGlobal":
-            url = "http://localhost:5094/leaderboard/people/global";
+            url = "https://api.pleaseletus.win/leaderboard/people/global";
             break;
         case "group":
             if (!groupId) {
@@ -57,10 +57,10 @@ async function loadLeaderboard(type) {
                 UpdateLeaderboard([]);
                 return;
             }
-            url = `http://localhost:5094/leaderboard/people/group/${groupId}`;
+            url = `https://api.pleaseletus.win/leaderboard/people/group/${groupId}`;
             break;
         case "groupGlobal":
-            url = "http://localhost:5094/leaderboard/groups/global";
+            url = "https://api.pleaseletus.win/leaderboard/groups/global";
             break;
         default:
             console.warn(`Unknown leaderboard type: ${type}`);

@@ -4,10 +4,10 @@ import { GetGroupRank, GetRankGlobal, GetRankInGroup } from "./leaderboard-help.
 const id = sessionStorage.getItem("personId");
 
 async function init() {
-    const response = await authFetch(`http://localhost:5094/person/${id}`);
+    const response = await authFetch(`https://api.pleaseletus.win/person/${id}`);
     const player = await response.json();
     console.log(player);
-    const groupResponse = await authFetch(`http://localhost:5094/group/${player.groupId}`);
+    const groupResponse = await authFetch(`https://api.pleaseletus.win/group/${player.groupId}`);
     const group = await groupResponse.json();
     console.log(group);
 
@@ -61,7 +61,7 @@ async function completeTodo(e) {
     const options = {
         body: JSON.stringify(todo.querySelector(".name").textContent)
     }
-    const reponse = await authFetchPost(`http://localhost:5094/person/${id}/tasks/complete`, options);
+    const reponse = await authFetchPost(`https://api.pleaseletus.win/person/${id}/tasks/complete`, options);
 
     init();
 }

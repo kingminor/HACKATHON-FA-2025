@@ -1,7 +1,7 @@
 ﻿API Documentation
 =================
 
-Base URL: http://localhost:5094
+Base URL: https://api.pleaseletus.win
 
 ---------------------------------------------------
 GROUP ENDPOINTS
@@ -24,7 +24,7 @@ Response:
 "Group name cannot be empty."
 
 Curl Example:
-curl -X POST "http://localhost:5094/group" -H "Content-Type: application/json" -d "\"Team Alpha\""
+curl -X POST "https://api.pleaseletus.win/group" -H "Content-Type: application/json" -d "\"Team Alpha\""
 
 ---------------------------------------------------
 PERSON ENDPOINTS
@@ -49,7 +49,7 @@ Response:
 }
 
 Curl Example:
-curl -X GET "http://localhost:5094/person"
+curl -X GET "https://api.pleaseletus.win/person"
 
 2. Get Person By ID
 -------------------
@@ -70,7 +70,7 @@ Response:
 - 404 Not Found if the person does not exist.
 
 Curl Example:
-curl -X GET "http://localhost:5094/person/{personId}"
+curl -X GET "https://api.pleaseletus.win/person/{personId}"
 
 3. Create a Person
 ------------------
@@ -88,7 +88,7 @@ Response:
 - 400 Bad Request if name is empty.
 
 Curl Example:
-curl -X POST "http://localhost:5094/person" -H "Content-Type: application/json" -d "\"John Doe\""
+curl -X POST "https://api.pleaseletus.win/person" -H "Content-Type: application/json" -d "\"John Doe\""
 
 4. Add Task to Person
 ---------------------
@@ -111,7 +111,7 @@ Response:
 - 404 Not Found if person ID does not exist.
 
 Curl Example:
-curl -X POST "http://localhost:5094/person/{personId}/tasks" -H "Content-Type: application/json" -d "{\"name\":\"Write Tests\",\"points\":20,\"isCompleted\":false}"
+curl -X POST "https://api.pleaseletus.win/person/{personId}/tasks" -H "Content-Type: application/json" -d "{\"name\":\"Write Tests\",\"points\":20,\"isCompleted\":false}"
 
 5. Complete Task
 ----------------
@@ -130,7 +130,7 @@ Response:
 - 404 Not Found if person or task does not exist.
 
 Curl Example:
-curl -X POST "http://localhost:5094/person/{personId}/tasks/complete" -H "Content-Type: application/json" -d "\"Write Tests\""
+curl -X POST "https://api.pleaseletus.win/person/{personId}/tasks/complete" -H "Content-Type: application/json" -d "\"Write Tests\""
 
 6. Assign Person to Group
 -------------------------
@@ -145,7 +145,7 @@ Response:
 - 404 Not Found if person does not exist.
 
 Curl Example:
-curl -X POST "http://localhost:5094/person/assign-group/{personId}/{groupId}"
+curl -X POST "https://api.pleaseletus.win/person/assign-group/{personId}/{groupId}"
 
 7. Get People by Group ID
 -------------------------
@@ -179,7 +179,7 @@ Response:
 ]
 
 Curl Example:
-curl -X GET "http://localhost:5094/person/group/{groupId}"
+curl -X GET "https://api.pleaseletus.win/person/group/{groupId}"
 
 ---------------------------------------------------
 LEADERBOARD ENDPOINT
@@ -207,7 +207,7 @@ Response:
 ]
 
 Curl Example:
-curl -X GET "http://localhost:5094/leaderboard"
+curl -X GET "https://api.pleaseletus.win/leaderboard"
 
 ---------------------------------------------------
 NOTES
