@@ -70,16 +70,17 @@ function toggleTasks(e) {
 function setLeaderboard(e) {
     console.log(e.target.classList);
     const type = e.target.classList[1];
-    if(type === "groups") {
-        document.querySelector(".leaderboard.players").id = ""
+    if(type === "groupGlobal") {
+        document.querySelector(".leaderboard.playerGlobal").id = ""
         document.querySelector(".leaderboardRanking").style.borderTopLeftRadius = "0px";
         document.querySelector(".leaderboardRanking").style.borderTopRightRadius = "10px";
     } else {
-        document.querySelector(".leaderboard.groups").id = ""
+        document.querySelector(".leaderboard.groupGlobal").id = ""
         document.querySelector(".leaderboardRanking").style.borderTopRightRadius = "0px";
         document.querySelector(".leaderboardRanking").style.borderTopLeftRadius = "10px";
     }
     e.target.id = "selected";
+    loadLeaderboard(type);
     return type;
 }
 
@@ -88,8 +89,10 @@ async function init() {
     await updateGroups();
     initGroupClickListener();
     updatePlayers();
-    let leaderboard = "groups";
-    document.querySelector(".groups").id = "selected";
+
+    let leaderboard = await loadLeaderboard("groupGlobal");
+    console.log(leaderboard);
+    document.querySelector(".groupGlobal").id = "selected";
     document.querySelectorAll(".leaderboard").forEach(el => {
         el.addEventListener("click", (e) => {
             leaderboard = setLeaderboard(e);
@@ -247,4 +250,44 @@ async function createPlayer(username, password, groupId) {
     //console.log(result);
     //personId
 }
+
+async function loadLeaderboard(type) {
+    let url;
+    //const groupId = sessionStorage.getItem("groupId");
+
+    switch (type) {
+        case "playerGlobal":
+            url = "https://api.pleaseletus.win/leaderboard/people/global";
+            break;
+        case "groupGlobal":
+            url = "https://api.pleaseletus.win/leaderboard/groups/global";
+            break;
+        default:
+            console.warn(`Unknown leaderboard type: ${type}`);
+            return;
+    }
+
+    try {
+        const response = await authFetch(url);
+        const data = response.json ? await response.json() : response;
+        console.log(`${type} data:`, data);
+        UpdateLeaderboard(data);
+    } catch (err) {
+        console.error("Error loading leaderboard:", err);
+    }
+}
+
+function UpdateLeaderboard(data) {
+    const ranking = document.querySelector(".leaderboardRanking");
+    ranking.innerHTML = data.map(player => {
+        return leaderboardTemplate(player)
+    });
+}
+
+function leaderboardTemplate(player) {
+    return `<div class="rank">
+        <p class="name">${player.name} (${player.points})</p>
+    </div>`
+}
+
 init();
