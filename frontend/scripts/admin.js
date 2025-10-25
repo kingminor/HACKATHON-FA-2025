@@ -188,7 +188,7 @@ function playerTemplate(name, id, tasks, points) {
             </svg>
         </div>
         <ul class="tasks hide">
-            <li class="newTask"><a href="./task.html">+ New Task</a></li>
+            <li class="newTask"><a href="./task.html?id=${id}">+ New Task</a></li>
             ${tasks.map((task) => {
                 return taskTemplate(task.name, task.points, task.isCompleted)
             }).join("")}
@@ -235,8 +235,9 @@ async function createPlayer(username, password, groupId) {
     //console.log(resJSON);
 
     const response2 = await authFetchPost(`http://localhost:5094/person/${resJSON.personId}/groups/${groupId}`, {body: JSON.stringify("")});
-    updatePlayers();
-    await window.location.reload();
+    document.querySelector(".groupManagerModal").classList.add("hide");
+    await updatePlayers();
+    //await window.location.reload();
     //console.log(result);
     //personId
 }
