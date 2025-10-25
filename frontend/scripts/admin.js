@@ -1,6 +1,6 @@
 import { authFetch } from "./auth-helper";
 
-const players = authFetch("http://localhost/person");
+const players = authFetch("http://localhost:5094/person");
 console.log(players);
 
 function groupClick(e) {
