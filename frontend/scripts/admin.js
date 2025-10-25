@@ -1,4 +1,4 @@
-import { authFetch } from "./auth-helper";
+import { authFetch } from "./auth-helper.js";
 
 const players = authFetch("http://localhost:5094/person");
 console.log(players);
@@ -67,7 +67,9 @@ function setLeaderboard(e) {
     return type;
 }
 
-function init() {
+async function init() {
+    let groups = await authFetch("http://localhost:5094/group");
+    console.log(groups.json());
     document.querySelectorAll(".group").forEach(el => {
         el.addEventListener("click", (e) => groupClick(e))
     });
